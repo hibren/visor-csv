@@ -1,16 +1,62 @@
-# React + Vite
+# 🗺️ Visor de Ubicaciones CSV con Leaflet
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es un **visor interactivo de ubicaciones geográficas** desarrollado con **React**, **Leaflet** y **TailwindCSS**, que permite **cargar archivos CSV** con coordenadas (`latitude`, `longitude`) y visualizar los puntos en un mapa dinámico.
 
-Currently, two official plugins are available:
+Además, incluye una **leyenda generada automáticamente** según las descripciones del CSV, un **panel lateral** para cargar o limpiar datos, y **popups personalizados** con colores e información de cada punto.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Características principales
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 📂 Carga de archivos `.csv` mediante drag & drop o selector.
+- 🗺️ Visualización de puntos en **Leaflet** con mapa claro (OpenStreetMap).
+- 🎨 Colores dinámicos por categoría de descripción (detectadas automáticamente).
+- 💬 Popups tipo tarjeta con diseño limpio y moderno.
+- 📘 Leyenda flotante dinámica con botón de apertura/cierre (`ℹ️`).
+- 🧭 Ajuste automático del mapa según las coordenadas cargadas.
+- 🧱 Construido con **React + Vite / Create React App**, **TailwindCSS**, y **Framer Motion**.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🧰 Tecnologías utilizadas
+
+| Tecnología | Descripción |
+|-------------|--------------|
+| ⚛️ **React** | Framework principal de la aplicación |
+| 🗺️ **Leaflet** + **React-Leaflet** | Motor de mapas interactivos |
+| 🎨 **TailwindCSS** | Framework CSS para diseño moderno |
+| 🪶 **Lucide-React** | Íconos minimalistas |
+| 📦 **PapaParse** | Lectura y parseo rápido de archivos CSV |
+| 🌀 **Framer Motion** | Animaciones suaves para UI (sidebar y leyenda) |
+
+---
+
+## ⚙️ Instalación y ejecución
+
+1. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/TU_USUARIO/visor-csv.git
+   cd visor-csv
+
+2. **Instalar dependencias**
+
+- npm install
+
+
+3. **Ejecutar el servidor de desarrollo**
+
+- npm start
+  
+
+4. **Abrir http://localhost:3000** en el navegador.
+
+
+👩‍💻 Autores
+
+- Alejandro Cano
+- Brenda Cano
+- Aldo Ortega
+
+
+
+
