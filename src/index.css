@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Fondo oscuro general */
+body {
+  @apply bg-gray-900 text-white;
+}
