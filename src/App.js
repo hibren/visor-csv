@@ -6,7 +6,7 @@ import {
   Popup,
   useMap,
 } from "react-leaflet";
-import { Upload, X, MapPin, Menu, Info } from "lucide-react";
+import { Upload, X, MapPin, Menu, Info, Users } from "lucide-react";
 import Papa from "papaparse";
 import { motion, AnimatePresence } from "framer-motion";
 import "leaflet/dist/leaflet.css";
@@ -24,19 +24,19 @@ function FitBounds({ markers }) {
   return null;
 }
 
-// --- Paleta fija de colores base ---
+// --- Paleta de colores base ---
 const baseColors = [
-  "#6b21a8", // violeta
-  "#991b1b", // rojo oscuro
-  "#ea580c", // naranja
-  "#dc2626", // rojo
-  "#f59e0b", // amarillo oscuro
-  "#facc15", // amarillo claro
-  "#2563eb", // azul
-  "#16a34a", // verde
+  "#6b21a8",
+  "#991b1b",
+  "#ea580c",
+  "#dc2626",
+  "#f59e0b",
+  "#facc15",
+  "#2563eb",
+  "#16a34a",
 ];
 
-// --- Función auxiliar para crear ícono ---
+// --- Crear ícono circular dinámico ---
 const createIcon = (color) =>
   L.divIcon({
     className: "custom-icon",
@@ -57,18 +57,15 @@ function App() {
   const [error, setError] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [legendOpen, setLegendOpen] = useState(false);
-  const [categories, setCategories] = useState([]); // ← categorías dinámicas
+  const [categories, setCategories] = useState([]);
   const fileInputRef = useRef(null);
 
-  // --- Generar un color según el índice o de forma aleatoria ---
   const getColorForCategory = (category, index) => {
     if (index < baseColors.length) return baseColors[index];
-    // si hay más categorías que colores base → genera uno aleatorio
     const hue = Math.floor(Math.random() * 360);
     return `hsl(${hue}, 70%, 50%)`;
   };
 
-  // --- Procesar CSV ---
   const processCSV = (file) => {
     setError("");
     setFileName(file.name);
@@ -109,7 +106,6 @@ function App() {
             return;
           }
 
-          // Crear paleta de colores dinámica
           const catArray = Array.from(foundCategories).map((cat, i) => ({
             label: cat,
             color: getColorForCategory(cat, i),
@@ -139,7 +135,6 @@ function App() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  // --- Obtener color según descripción dinámica ---
   const getColorFromCategory = (descripcion) => {
     const found = categories.find((c) => c.label === descripcion);
     return found ? found.color : "#3b82f6";
@@ -166,59 +161,72 @@ function App() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="absolute right-0 top-0 h-full w-80 bg-white border-l border-gray-300 shadow-2xl z-[998] flex flex-col"
+            className="absolute right-0 top-0 h-full w-80 bg-white border-l border-gray-300 shadow-2xl z-[998] flex flex-col justify-between"
           >
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
-                <MapPin className="text-blue-500" /> Cargar datos CSV
-              </h2>
-              <button
-                onClick={() => setSidebarOpen(false)}
-                className="text-gray-500 hover:text-black"
-              >
-                <X size={18} />
-              </button>
+            {/* Contenido principal */}
+            <div className="flex flex-col flex-1">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
+                  <MapPin className="text-blue-500" /> Cargar datos CSV
+                </h2>
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="text-gray-500 hover:text-black"
+                >
+                  <X size={18} />
+                </button>
+              </div>
+
+              <div className="p-4 flex-1 overflow-y-auto text-sm text-gray-600">
+                {!fileName ? (
+                  <>
+                    <p className="mb-3">
+                      Subí un archivo CSV con columnas:
+                      <br />
+                      <code>latitude, longitude, tipo, descripcion</code>
+                    </p>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".csv"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                      id="file-upload"
+                    />
+                    <label
+                      htmlFor="file-upload"
+                      className="block bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-md cursor-pointer"
+                    >
+                      Seleccionar archivo CSV
+                    </label>
+                    {error && <p className="text-red-600 mt-3 text-xs">{error}</p>}
+                  </>
+                ) : (
+                  <div className="space-y-3">
+                    <p>
+                      <strong>Archivo:</strong> {fileName}
+                    </p>
+                    <p className="text-blue-500">
+                      {markers.length} ubicaciones cargadas
+                    </p>
+                    <button
+                      onClick={clearData}
+                      className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md w-full"
+                    >
+                      Borrar datos
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
-            <div className="p-4 flex-1 overflow-y-auto text-sm text-gray-600">
-              {!fileName ? (
-                <>
-                  <p className="mb-3">
-                    Subí un archivo CSV con columnas:
-                    <br />
-                    <code>latitude, longitude, tipo, descripcion</code>
-                  </p>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".csv"
-                    onChange={handleFileUpload}
-                    className="hidden"
-                    id="file-upload"
-                  />
-                  <label
-                    htmlFor="file-upload"
-                    className="block bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-md cursor-pointer"
-                  >
-                    Seleccionar archivo CSV
-                  </label>
-                  {error && <p className="text-red-600 mt-3 text-xs">{error}</p>}
-                </>
-              ) : (
-                <div className="space-y-3">
-                  <p>
-                    <strong>Archivo:</strong> {fileName}
-                  </p>
-                  <p className="text-blue-500">{markers.length} ubicaciones cargadas</p>
-                  <button
-                    onClick={clearData}
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md w-full"
-                  >
-                    Borrar datos
-                  </button>
-                </div>
-              )}
+            {/* Footer */}
+            <div className="border-t border-gray-200 bg-gray-50 p-4 text-[11px] text-gray-600 flex flex-col items-center justify-center text-center">
+              <p className="text-gray-400 text-[10px] italic mt-2">
+                Todos los derechos reservados © 2025 — Brenda Cano, Alejandro Cano y Aldo Ortega.
+              </p>
             </div>
+
           </motion.div>
         )}
       </AnimatePresence>
@@ -281,16 +289,17 @@ function App() {
         })}
       </MapContainer>
 
-      {/* Botón flotante para abrir/cerrar leyenda */}
+      {/* Botón flotante para leyenda (movido a la izquierda) */}
       {categories.length > 0 && (
         <button
           onClick={() => setLegendOpen((prev) => !prev)}
-          className="absolute bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg z-[999]"
+          className="absolute bottom-6 left-6 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg z-[999]"
           title="Mostrar leyenda"
         >
           <Info size={22} />
         </button>
       )}
+
 
       {/* Leyenda dinámica */}
       <AnimatePresence>
