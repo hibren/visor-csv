@@ -46,9 +46,16 @@ Además, incluye una **leyenda generada automáticamente** según las descripcio
 3. **Ejecutar el servidor de desarrollo**
 
 - npm start
-
+  
 
 4. **Abrir http://localhost:3000** en el navegador.
+
+
+👩‍💻 Autores
+
+- Alejandro Cano
+- Brenda Cano
+- Aldo Ortega
 
 
 
