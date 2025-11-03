@@ -1,12 +1,10 @@
 import {
   ResponsiveContainer,
-  BarChart,
-  Bar,
-  CartesianGrid,
-  XAxis,
-  YAxis,
+  PieChart,
+  Pie,
   Tooltip,
   Cell,
+  Legend,
 } from "recharts";
 
 const data = [
@@ -42,12 +40,9 @@ function CustomTooltip({ active, payload }) {
 
 export default function NeighborhoodActivitiesChart() {
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-md">
+    <div>
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-wide text-blue-500">
-            Caracteristicas del barrio
-          </p>
           <h2 className="text-xl font-bold text-gray-900">
             Que tipo de actividades se realizan en su barrio?
           </h2>
@@ -61,26 +56,23 @@ export default function NeighborhoodActivitiesChart() {
       </div>
 
       <ResponsiveContainer width="100%" height={360}>
-        <BarChart
-          data={data}
-          layout="vertical"
-          margin={{ top: 10, right: 20, left: 80, bottom: 10 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-          <XAxis type="number" allowDecimals={false} />
-          <YAxis
-            dataKey="name"
-            type="category"
-            tick={{ fontSize: 12 }}
-            width={90}
-          />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(37, 99, 235, 0.12)" }} />
-          <Bar dataKey="value" radius={[0, 8, 8, 0]} maxBarSize={28}>
+        <PieChart>
+          <Tooltip content={<CustomTooltip />} />
+          <Legend iconType="circle" />
+          <Pie
+            data={data}
+            dataKey="value"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={120}
+            labelLine={false}
+          >
             {data.map((entry) => (
               <Cell key={entry.name} fill={entry.fill} />
             ))}
-          </Bar>
-        </BarChart>
+          </Pie>
+        </PieChart>
       </ResponsiveContainer>
     </div>
   );
