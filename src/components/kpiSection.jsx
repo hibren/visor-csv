@@ -1,42 +1,26 @@
 import KPICard from "./kpiCard";
 
-const RESPONSES = {
-  limpio: 26,
-  sucio: 10,
-  iluminado: 19,
-  oscuro: 9,
-};
-
-const totalResponses =
-  RESPONSES.limpio + RESPONSES.sucio + RESPONSES.iluminado + RESPONSES.oscuro;
-const positiveResponses = RESPONSES.limpio + RESPONSES.iluminado;
-const negativeResponses = RESPONSES.sucio + RESPONSES.oscuro;
-
 export default function KPISection() {
   const kpis = [
     {
-      label: "Respuestas registradas",
-      value: totalResponses.toString(),
-      description: "Vecinos encuestados para la pregunta 1",
+      label: "Total de Encuestados",
+      value: "~250",
+      description: "Número aproximado de participantes",
     },
     {
-      label: "Percepcion favorable",
-      value: `${positiveResponses} (${Math.round(
-        (positiveResponses / totalResponses) * 100
-      )}%)`,
-      description: "Entorno percibido como limpio o bien iluminado",
+      label: "Percepción General de Seguridad",
+      value: "81% Favorable",
+      description: "Promedio de percepción de seguridad (día y noche)",
     },
     {
-      label: "Percepcion desfavorable",
-      value: `${negativeResponses} (${Math.round(
-        (negativeResponses / totalResponses) * 100
-      )}%)`,
-      description: "Entorno percibido como sucio o mal iluminado",
+      label: "Principal Factor de Delincuencia",
+      value: "Drogas/Alcohol",
+      description: "Factor más votado que contribuye a la delincuencia",
     },
     {
-      label: "Opciones evaluadas",
-      value: "4",
-      description: "Categorias de respuesta disponibles",
+      label: "Delito más Común",
+      value: "Robo",
+      description: "Delito más reportado por los encuestados",
     },
   ];
 
