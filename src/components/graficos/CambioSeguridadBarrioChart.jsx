@@ -8,10 +8,18 @@ import {
 } from "recharts";
 
 const data = [
-  { name: "Comercial", value: 83, fill: "#1d4ed8" },
-  { name: "Mixto", value: 103, fill: "#60a5fa" },
-  { name: "Residencial", value: 49, fill: "#38bdf8" },
-  { name: "Industrial", value: 7, fill: "#f97316" },
+  {
+    name: "Sí",
+    value: 82,
+    fill: "#16a34a",
+    description: "Ha notado algún cambio en la seguridad de su barrio.",
+  },
+  {
+    name: "No",
+    value: 158,
+    fill: "#ef4444",
+    description: "No ha notado ningún cambio en la seguridad de su barrio.",
+  },
 ];
 
 const totalResponses = data.reduce((sum, item) => sum + item.value, 0);
@@ -21,30 +29,32 @@ function CustomTooltip({ active, payload }) {
     return null;
   }
 
-  const { name, value, fill } = payload[0].payload;
+  const { name, value, description, fill } = payload[0].payload;
   const percentage = ((value / totalResponses) * 100).toFixed(1);
 
   return (
     <div className="w-60 rounded-xl border border-blue-100 bg-white p-4 shadow-lg">
       <p className="text-sm font-semibold text-gray-900">{name}</p>
       <p className="text-2xl font-bold text-gray-900">
-        {value}
-        <span className="text-sm font-medium text-gray-500"> respuestas</span>
+        {value}{" "}
+        <span className="text-sm font-medium text-gray-500">respuestas</span>
       </p>
-      <p className="text-sm font-medium" style={{ color: fill }}>
+      <p className="mb-2 text-sm font-medium" style={{ color: fill }}>
         {percentage}% del total
       </p>
+      <p className="text-xs text-gray-500">{description}</p>
     </div>
   );
 }
 
-export default function NeighborhoodActivitiesChart() {
+export default function CambioSeguridadBarrioChart() {
   return (
     <div>
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-bold text-gray-900">
-            Que tipo de actividades se realizan en su barrio?
+            ¿Ha notado algún cambio en la seguridad de su barrio en los últimos
+            meses?
           </h2>
           <p className="text-sm text-gray-500">
             Total de respuestas: {totalResponses}

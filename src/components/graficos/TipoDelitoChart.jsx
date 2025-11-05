@@ -7,67 +7,69 @@ import {
   CartesianGrid,
   Tooltip,
   Cell,
+  Legend,
 } from "recharts";
 
 const data = [
   {
-    name: "Limpio y ordenado",
-    value: 26,
-    fill: "#0ea5e9",
-    description: "Calles cuidadas y espacios comunes prolijos.",
-  },
-  {
-    name: "Sucio y desordenado",
-    value: 10,
-    fill: "#f97316",
-    description: "Presencia de residuos y falta de mantenimiento.",
-  },
-  {
-    name: "Bien iluminado",
-    value: 19,
-    fill: "#38bdf8",
-    description: "Alumbrado publico suficiente y en funcionamiento.",
-  },
-  {
-    name: "Mal iluminado",
-    value: 9,
+    name: "Robo",
+    value: 149,
     fill: "#ef4444",
-    description: "Zonas oscuras o con luminarias fuera de servicio.",
+    description: "Robo es el delito más reportado.",
+  },
+  {
+    name: "Hurto",
+    value: 54,
+    fill: "#f97316",
+    description: "Hurto es el segundo delito más reportado.",
+  },
+  {
+    name: "Lesiones",
+    value: 11,
+    fill: "#facc15",
+    description: "Lesiones es el delito menos reportado.",
+  },
+  {
+    name: "Amenazas",
+    value: 7,
+    fill: "#0ea5e9",
+    description: "Amenazas es un tipo de delito reportado.",
   },
 ];
 
 const totalResponses = data.reduce((sum, item) => sum + item.value, 0);
 
-function CustomTooltip({ active, payload }) {
-  if (!active || !payload?.length) {
-    return null;
+function CustomTooltip({ active, payload, label }) {
+  if (active && payload && payload.length) {
+    const { value } = payload[0];
+    const entry = data.find((item) => item.name === label);
+    const percentage = ((value / totalResponses) * 100).toFixed(1);
+
+    return (
+      <div className="w-60 rounded-xl border border-blue-100 bg-white p-4 shadow-lg">
+        <p className="text-sm font-semibold text-gray-900">{label}</p>
+        <p className="text-2xl font-bold text-gray-900">
+          {value}{" "}
+          <span className="text-sm font-medium text-gray-500">respuestas</span>
+        </p>
+        <p className="mb-2 text-sm font-medium" style={{ color: entry.fill }}>
+          {percentage}% del total
+        </p>
+        <p className="text-xs text-gray-500">{entry.description}</p>
+      </div>
+    );
   }
 
-  const { name, value, description, fill } = payload[0].payload;
-  const percentage = ((value / totalResponses) * 100).toFixed(1);
-
-  return (
-    <div className="w-60 rounded-xl border border-blue-100 bg-white p-4 shadow-lg">
-      <p className="text-sm font-semibold text-gray-900">{name}</p>
-      <p className="text-2xl font-bold text-gray-900">
-        {value}{" "}
-        <span className="text-sm font-medium text-gray-500">respuestas</span>
-      </p>
-      <p className="mb-2 text-sm font-medium" style={{ color: fill }}>
-        {percentage}% del total
-      </p>
-      <p className="text-xs text-gray-500">{description}</p>
-    </div>
-  );
+  return null;
 }
 
-export default function NeighborhoodEnvironmentChart() {
+export default function TipoDelitoChart() {
   return (
     <div>
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-bold text-gray-900">
-            Como describiria el entorno fisico de su barrio?
+            ¿Qué tipo de delito ha visto o escuchado?
           </h2>
           <p className="text-sm text-gray-500">
             Total de respuestas: {totalResponses}

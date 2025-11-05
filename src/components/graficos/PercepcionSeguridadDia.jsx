@@ -70,12 +70,10 @@ export default function DaySafetyPerceptionChart() {
             ¿Cómo se siente de seguro en su barrio durante el día?
           </h2>
           <p className="text-sm text-gray-500">
-            Distribución de respuestas de {totalResponses} vecinos encuestados.
+            Total de respuestas: {totalResponses}
           </p>
         </div>
-        <div className="rounded-full border border-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-          4 opciones de respuesta
-        </div>
+
       </div>
 
       <ResponsiveContainer width="100%" height={360}>

@@ -16,7 +16,7 @@ export default function Header() {
         </div>
         <p className="text-blue-100">
           Visualizacion de datos preliminares del trabajo de criminalistica en
-          barrios formosenos.
+          barrios formoseños.
         </p>
       </div>
       <Link to={isMapPage ? "/" : "/mapa"}>

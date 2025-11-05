@@ -12,25 +12,25 @@ import {
 const data = [
   {
     name: "Limpio y ordenado",
-    value: 26,
+    value: 128,
     fill: "#0ea5e9",
     description: "Calles cuidadas y espacios comunes prolijos.",
   },
   {
     name: "Sucio y desordenado",
-    value: 10,
+    value: 45,
     fill: "#f97316",
     description: "Presencia de residuos y falta de mantenimiento.",
   },
   {
     name: "Bien iluminado",
-    value: 19,
+    value: 83,
     fill: "#38bdf8",
     description: "Alumbrado publico suficiente y en funcionamiento.",
   },
   {
     name: "Mal iluminado",
-    value: 9,
+    value: 36,
     fill: "#ef4444",
     description: "Zonas oscuras o con luminarias fuera de servicio.",
   },
@@ -70,11 +70,8 @@ export default function NeighborhoodEnvironmentChart() {
             Como describiria el entorno fisico de su barrio?
           </h2>
           <p className="text-sm text-gray-500">
-            Distribucion de respuestas de {totalResponses} vecinos encuestados.
+            Total de respuestas: {totalResponses}
           </p>
-        </div>
-        <div className="rounded-full border border-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-          4 opciones de respuesta
         </div>
       </div>
 

@@ -10,13 +10,13 @@ import {
 const data = [
   {
     name: "Sí",
-    value: 28,
+    value: 129,
     fill: "#ef4444", // Rojo para inseguro
     description: "Vecinos que consideran su barrio inseguro.",
   },
   {
     name: "No",
-    value: 36,
+    value: 111,
     fill: "#22c55e", // Verde para seguro
     description: "Vecinos que no consideran su barrio inseguro.",
   },
@@ -53,14 +53,12 @@ export default function NeighborhoodSafetyChart() {
       <div className="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-bold text-gray-900">
-            ¿Hay algún lugar en su barrio que considere inseguro o propenso a la delincuencia?
+            ¿Hay algún lugar en su barrio que considere inseguro o propenso a la
+            delincuencia?
           </h2>
           <p className="text-sm text-gray-500">
-            Distribución de respuestas de {totalResponses} vecinos encuestados.
+            Total de respuestas: {totalResponses}
           </p>
-        </div>
-        <div className="rounded-full border border-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-          2 opciones de respuesta
         </div>
       </div>
 
@@ -75,7 +73,9 @@ export default function NeighborhoodSafetyChart() {
             cy="50%"
             outerRadius={120}
             labelLine={false}
-            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            label={({ name, percent }) =>
+              `${name} ${(percent * 100).toFixed(0)}%`
+            }
           >
             {data.map((entry) => (
               <Cell key={entry.name} fill={entry.fill} />
