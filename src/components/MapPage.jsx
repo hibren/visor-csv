@@ -140,8 +140,8 @@ function App() {
 
   return (
     <div
-      className="h-screen w-screen relative overflow-hidden"
-      style={{ fontFamily: "Poppins, sans-serif" }}
+      className="relative w-full overflow-hidden rounded-3xl shadow-lg bg-white"
+      style={{ fontFamily: "Poppins, sans-serif", minHeight: "80vh" }}
     >
       {/* Botón menú lateral */}
       <button
@@ -235,7 +235,8 @@ function App() {
       <MapContainer
         center={[-26.177, -58.17]}
         zoom={13}
-        style={{ height: "100vh", width: "100%" }}
+        className="w-full"
+        style={{ height: "80vh", width: "100%" }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

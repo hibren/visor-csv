@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+@media (max-width: 640px) {
+  .section-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .section-card > p {
+    align-self: center;
+  }
+
+  .section-card .recharts-responsive-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .section-card .recharts-wrapper {
+    width: min(100%, 320px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .section-card .recharts-x-axis {
+    display: none !important;
+  }
+}
