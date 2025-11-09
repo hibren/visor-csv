@@ -1,4 +1,4 @@
-import KPISection from "./kpiSection";
+import KPISection from "./KpiSection";
 import SugerenciasVecinos from "./SugerenciasVecinos";
 import NeighborhoodEnvironmentChart from "./graficos/BarrioAmbienteChart";
 import NeighborhoodActivitiesChart from "./graficos/ActividadBarriosChart";
@@ -11,7 +11,7 @@ import DelitosBarrioChart from "./graficos/DelitosBarrioChart";
 import TipoDelitoChart from "./graficos/TipoDelitoChart";
 import DelincuenciaGruposChart from "./graficos/DelincuenciaGruposChart";
 import LimpiezaOrdenDelincuenciaChart from "./graficos/LimpiezaOrdenDelincuenciaChart";
-import SectionCard from "./sectionCard";
+import SectionCard from "./SectionCard";
 
 const Dashboard = () => {
   return (
