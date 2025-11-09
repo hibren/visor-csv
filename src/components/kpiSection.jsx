@@ -1,4 +1,4 @@
-import KPICard from "./kpiCard";
+import KPICard from "./KpiCard";
 
 export default function KPISection() {
   const kpis = [
