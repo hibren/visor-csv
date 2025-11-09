@@ -1,0 +1,39 @@
+<!-- CrimeMap · Isotipo azul -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-labelledby="title desc">
+  <title id="title">CrimeMap Icon</title>
+  <desc id="desc">Pin de mapa azul con una lupa y una huella digital, representando investigación criminal.</desc>
+
+  <style>
+    .accent { fill: #1E90FF; } /* azul brillante */
+    .stroke-ink { stroke: #0F172A; } /* azul oscuro casi negro */
+  </style>
+
+  <!-- Sombra -->
+  <ellipse cx="90" cy="170" rx="40" ry="10" fill="#93C5FD" opacity=".5"></ellipse>
+
+  <!-- Pin -->
+  <path d="
+    M90,5
+    C58,5 30,30 30,65
+    c0,40 40,75 50,110
+    c10,-35 50,-70 50,-110
+    C130,30 122,5 90,5 Z" class="accent"></path>
+
+  <!-- Huella circular -->
+  <circle cx="90" cy="70" r="34" fill="white" opacity=".25"></circle>
+
+  <!-- Lupa -->
+  <g transform="translate(90,70)">
+    <circle r="20" class="stroke-ink" stroke-width="4" fill="none"></circle>
+    <line x1="12" y1="12" x2="26" y2="26" class="stroke-ink" stroke-width="4" stroke-linecap="round"></line>
+  </g>
+
+  <!-- Huella digital -->
+  <g transform="translate(90,70)" stroke="#0F172A" stroke-width="1.5" fill="none" opacity=".8">
+    <path d="M0,-12 a12,12 0 0,1 12,12"></path>
+    <path d="M-8,-8 a8,8 0 0,1 8,8"></path>
+    <path d="M-4,-4 a4,4 0 0,1 4,4"></path>
+    <path d="M-10,4 a10,10 0 0,0 10,10"></path>
+    <path d="M0,10 a10,10 0 0,0 10,-10"></path>
+  </g>
+</svg>
