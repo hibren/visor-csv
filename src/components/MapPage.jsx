@@ -19,16 +19,7 @@ function FitBounds({ markers }) {
 }
 
 // --- Paleta de colores base ---
-const baseColors = [
-  "#6b21a8",
-  "#991b1b",
-  "#ea580c",
-  "#dc2626",
-  "#f59e0b",
-  "#facc15",
-  "#2563eb",
-  "#16a34a",
-];
+const baseColors = ["#dc2626", "#2563eb", "#16a34a"];
 
 // --- Crear ícono circular dinámico ---
 const createIcon = (color) =>
@@ -94,7 +85,9 @@ function App() {
               const lng = parseFloat(String(lngRaw).replace(",", "."));
               if (!isNaN(lat) && !isNaN(lng)) {
                 newMarkers.push({ id: index, lat, lng, data: row });
-                foundCategories.add(descripcion.trim());
+                foundCategories.add(
+                  (row.tipo || row.TIPO || descripcion).trim()
+                );
               }
             }
           });
@@ -245,9 +238,11 @@ function App() {
         <FitBounds markers={markers} />
 
         {markers.map((marker) => {
-          const descripcion =
+          const tipoForColor = marker.data.TIPO || marker.data.tipo || "Otro";
+          const color = getColorFromCategory(tipoForColor);
+
+          const displayDescripcion =
             marker.data.DESCRIPCION || marker.data.descripcion || "Otro";
-          const color = getColorFromCategory(descripcion);
 
           return (
             <Marker
@@ -282,7 +277,7 @@ function App() {
                     <strong>Lat:</strong> {marker.lat.toFixed(5)} <br />
                     <strong>Lng:</strong> {marker.lng.toFixed(5)}
                   </p>
-                  <p style={{ fontSize: "13px" }}>{descripcion}</p>
+                  <p style={{ fontSize: "13px" }}>{displayDescripcion}</p>
                 </div>
               </Popup>
             </Marker>

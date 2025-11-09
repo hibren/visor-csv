@@ -13,7 +13,7 @@ export default function Header() {
             <BarChart3 size={32} />
           </div>
           <h1 className="text-3xl font-bold md:text-4xl">
-            Encuesta de Entorno Barrial - Ciudad de Formosa
+            Encuesta de Entorno Barrial
           </h1>
         </div>
         <p className="text-blue-100">
