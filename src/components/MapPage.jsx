@@ -1,12 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+﻿import React, { useState, useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { Upload, X, MapPin, Menu, Info, Users } from "lucide-react";
 import Papa from "papaparse";
+import * as XLSX from "xlsx";
 import { motion, AnimatePresence } from "framer-motion";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// --- Ajusta el mapa automáticamente a los marcadores ---
+// --- Ajusta el mapa automa¡ticamente a los marcadores ---
 function FitBounds({ markers }) {
   const map = useMap();
   useEffect(() => {
@@ -21,7 +22,7 @@ function FitBounds({ markers }) {
 // --- Paleta de colores base ---
 const baseColors = ["#dc2626", "#2563eb", "#16a34a"];
 
-// --- Crear ícono circular dinámico ---
+// --- Crear i­cono circular dina¡mico ---
 const createIcon = (color) =>
   L.divIcon({
     className: "custom-icon",
@@ -51,73 +52,105 @@ function App() {
     return `hsl(${hue}, 70%, 50%)`;
   };
 
+  const buildDataFromRows = (rows) => {
+    const markersFromRows = [];
+    const foundCategories = new Set();
+
+    (rows || []).forEach((row, index) => {
+      if (!row || typeof row !== "object") return;
+
+      const latRaw =
+        row.latitude || row.lat || row.Latitude || row.LAT || row.latitud;
+      const lngRaw =
+        row.longitude || row.lng || row.lon || row.Longitude || row.LONGITUD;
+      const tipo = row.tipo || row.TIPO || "Otro";
+
+      if (latRaw && lngRaw) {
+        const lat = parseFloat(String(latRaw).replace(",", "."));
+        const lng = parseFloat(String(lngRaw).replace(",", "."));
+
+        if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+          markersFromRows.push({ id: index, lat, lng, data: row });
+          const normalizedCategory = String(tipo).trim() || "Otro";
+          foundCategories.add(normalizedCategory);
+        }
+      }
+    });
+
+    if (markersFromRows.length === 0) {
+      throw new Error("No se encontraron coordenadas validas.");
+    }
+
+    const categoriesList = Array.from(foundCategories).map((cat, i) => ({
+      label: cat,
+      color: getColorForCategory(cat, i),
+    }));
+
+    return { markersFromRows, categoriesList };
+  };
+
+  const processRows = (rows, sourceName) => {
+    const { markersFromRows, categoriesList } = buildDataFromRows(rows);
+    setFileName(sourceName);
+    setCategories(categoriesList);
+    setMarkers(markersFromRows);
+  };
+
   const processCSV = (file) => {
     setError("");
-    setFileName(file.name);
-
     Papa.parse(file, {
       header: true,
       dynamicTyping: true,
       skipEmptyLines: true,
       complete: (results) => {
         try {
-          const newMarkers = [];
-          const foundCategories = new Set();
-
-          results.data.forEach((row, index) => {
-            const latRaw =
-              row.latitude || row.lat || row.Latitude || row.LAT || row.latitud;
-            const lngRaw =
-              row.longitude ||
-              row.lng ||
-              row.lon ||
-              row.Longitude ||
-              row.LONGITUD;
-            const descripcion =
-              row.descripcion ||
-              row.DESCRIPCION ||
-              row.tipo ||
-              row.TIPO ||
-              "Sin descripción";
-
-            if (latRaw && lngRaw) {
-              const lat = parseFloat(String(latRaw).replace(",", "."));
-              const lng = parseFloat(String(lngRaw).replace(",", "."));
-              if (!isNaN(lat) && !isNaN(lng)) {
-                newMarkers.push({ id: index, lat, lng, data: row });
-                foundCategories.add(
-                  (row.tipo || row.TIPO || descripcion).trim()
-                );
-              }
-            }
-          });
-
-          if (newMarkers.length === 0) {
-            setError("No se encontraron coordenadas válidas.");
-            return;
-          }
-
-          const catArray = Array.from(foundCategories).map((cat, i) => ({
-            label: cat,
-            color: getColorForCategory(cat, i),
-          }));
-
-          setCategories(catArray);
-          setMarkers(newMarkers);
+          processRows(results.data, file.name);
         } catch (err) {
-          setError("Error al procesar el archivo: " + err.message);
+          setError(err.message);
         }
       },
       error: (err) => setError("Error al leer el archivo: " + err.message),
     });
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (file && file.name.endsWith(".csv")) processCSV(file);
-    else setError("Seleccioná un archivo CSV válido");
+  const processExcel = async (file) => {
+    try {
+      setError("");
+      const buffer = await file.arrayBuffer();
+      const workbook = XLSX.read(buffer, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+
+      if (!sheetName) {
+        setError("El archivo Excel no tiene hojas para leer.");
+        return;
+      }
+
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+      processRows(jsonData, file.name);
+    } catch (err) {
+      setError("Error al leer el archivo Excel: " + err.message);
+    }
   };
 
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const extension = file.name.split(".").pop()?.toLowerCase();
+
+    if (extension === "csv") {
+      processCSV(file);
+      return;
+    }
+
+    if (extension === "xlsx" || extension === "xls") {
+      await processExcel(file);
+      return;
+    }
+
+    setError("Selecciona un archivo CSV o Excel valido");
+  };
   const clearData = () => {
     setMarkers([]);
     setFileName("");
@@ -126,8 +159,8 @@ function App() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const getColorFromCategory = (descripcion) => {
-    const found = categories.find((c) => c.label === descripcion);
+  const getColorForCategoryLabel = (categoryLabel) => {
+    const found = categories.find((c) => c.label === categoryLabel);
     return found ? found.color : "#3b82f6";
   };
 
@@ -136,7 +169,7 @@ function App() {
       className="relative w-full overflow-hidden rounded-3xl shadow-lg bg-white"
       style={{ fontFamily: "Poppins, sans-serif", minHeight: "80vh" }}
     >
-      {/* Botón menú lateral */}
+      {/* Botonn menu lateral */}
       <button
         onClick={() => setSidebarOpen((prev) => !prev)}
         className="absolute top-4 right-4 z-[999] bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg"
@@ -158,7 +191,7 @@ function App() {
             <div className="flex flex-col flex-1">
               <div className="flex items-center justify-between p-4 border-b border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-700 flex items-center gap-2">
-                  <MapPin className="text-blue-500" /> Cargar datos CSV
+                  <MapPin className="text-blue-500" /> Cargar datos CSV o Excel
                 </h2>
                 <button
                   onClick={() => setSidebarOpen(false)}
@@ -172,14 +205,14 @@ function App() {
                 {!fileName ? (
                   <>
                     <p className="mb-3">
-                      Subí un archivo CSV con columnas:
+                      Sube un archivo CSV o Excel con columnas:
                       <br />
                       <code>latitude, longitude, tipo, descripcion</code>
                     </p>
                     <input
                       ref={fileInputRef}
                       type="file"
-                      accept=".csv"
+                      accept=".csv,.xlsx,.xls"
                       onChange={handleFileUpload}
                       className="hidden"
                       id="file-upload"
@@ -188,7 +221,7 @@ function App() {
                       htmlFor="file-upload"
                       className="block bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-md cursor-pointer"
                     >
-                      Seleccionar archivo CSV
+                      Seleccionar archivo (CSV o Excel)
                     </label>
                     {error && (
                       <p className="text-red-600 mt-3 text-xs">{error}</p>
@@ -239,7 +272,7 @@ function App() {
 
         {markers.map((marker) => {
           const tipoForColor = marker.data.TIPO || marker.data.tipo || "Otro";
-          const color = getColorFromCategory(tipoForColor);
+          const color = getColorForCategoryLabel(tipoForColor);
 
           const displayDescripcion =
             marker.data.DESCRIPCION || marker.data.descripcion || "Otro";
